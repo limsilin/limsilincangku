@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小朋友小游戏乐园</title>
+  <style>
+    :root {
+      --bg: #eaf6ff;
+      --card: #ffffff;
+      --text: #16588d;
+      --primary: #2c9df2;
+      --primary-dark: #0b7ad0;
+      --accent: #ffe27a;
+      --ok: #12b981;
+      --shadow: 0 8px 20px rgba(36, 114, 180, 0.12);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #f4fbff 0%, var(--bg) 55%, #d7ecff 100%);
+      color: var(--text);
+    }
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 24px 18px 44px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #6dc7ff, #70a8ff);
+      border-radius: 24px;
+      padding: 28px 20px;
+      color: #fff;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+    }
+    .hero p {
+      margin: 10px 0 0;
+      font-size: 1.05rem;
+      opacity: 0.96;
+    }
+    .toolbar {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
+      background: #fff8d3;
+      border: 2px solid #ffe9a8;
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .toolbar-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .chip, .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+    .chip {
+      background: #fff;
+      color: #1f4f7a;
+      border: 1px solid #d7e6f5;
+    }
+    .chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .chip:hover, .btn:hover {
+      transform: translateY(-1px);
+    }
+    #search {
+      width: 260px;
+      max-width: 100%;
+      border: 1px solid #cae0f3;
+      background: #fff;
+      border-radius: 999px;
+      padding: 9px 14px;
+      outline: none;
+      font-size: 0.95rem;
+      color: #285a83;
+    }
+    .btn {
+      background: var(--ok);
+      color: #fff;
+      font-weight: 600;
+    }
+    .btn:hover {
+      background: #0da06f;
+    }
+    .tips {
+      margin-top: 8px;
+      font-size: 0.93rem;
+      color: #6c7b88;
+    }
+    .games {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid #d9e9f8;
+      display: flex;
+      flex-direction: column;
+      min-height: 190px;
+    }
+    .badge {
+      align-self: start;
+      background: var(--accent);
+      color: #6a5400;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .card h3 {
+      margin: 9px 0 6px;
+      font-size: 1.04rem;
+      color: #185385;
+    }
+    .card p {
+      margin: 0 0 12px;
+      color: #5f7a90;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      flex-grow: 1;
+    }
+    .play {
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-weight: 600;
+    }
+    .play:hover {
+      background: var(--primary-dark);
+    }
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      color: #68869f;
+      font-size: 0.88rem;
+    }
+    .empty {
+      text-align: center;
+      color: #557898;
+      padding: 26px 8px;
+      background: #ffffffbe;
+      border-radius: 12px;
+      border: 1px dashed #c8def0;
+      grid-column: 1 / -1;
+    }
+    .file-notice {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #fff3e0;
+      border: 2px solid #ffb74d;
+      color: #5d4037;
+      text-align: left;
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+    .file-notice strong {
+      color: #bf360c;
+    }
+    .file-notice code {
+      background: #fff8e1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+    .file-notice.file-notice--show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="fileProtocolNotice" class="file-notice" role="alert">
+      <strong>当前是用「本机文件」打开的（地址栏是 file:/// 开头）。</strong> 你能看到游戏标题，但点「开始游戏」进去的仍是 file 协议，<strong>游戏画面会黑屏或不显示</strong>。<br />
+      正确做法：关闭本页，在本文件夹双击 <strong>本地启动网站.bat</strong>，等浏览器自动打开 <code>http://127.0.0.1:8765/index.html</code>（必须是 http），再点游戏。已装 Node 但没装 Python 时，脚本会自动用 <code>npx serve</code>。上传到 GitHub Pages 后同样用 http 访问即可。
+    </div>
+    <header class="hero">
+      <h1>小朋友小游戏乐园</h1>
+      <p>精选益智小游戏，安全轻松，打开就能玩。</p>
+    </header>
+
+    <section class="toolbar" aria-label="筛选区域">
+      <div class="toolbar-row" id="categoryBar"></div>
+      <div class="toolbar-row">
+        <input id="search" type="text" placeholder="搜索游戏名，例如：拼图" />
+        <button class="btn" id="shuffleBtn" type="button">随机推荐 6 款</button>
+      </div>
+      <div class="tips" id="resultInfo">正在加载游戏列表...</div>
+    </section>
+
+    <main>
+      <section class="games" id="gamesGrid" aria-live="polite">
+        <div id="jsFallback" class="empty">
+          正在加载游戏列表… 若长时间只有本段文字，多半是<strong>浏览器禁用了 JavaScript</strong>，请到浏览器设置里允许脚本，或换用 Chrome / Edge 再试。
+        </div>
+      </section>
+    </main>
+    <noscript>
+      <div class="container" style="padding:20px;background:#fff3e0;color:#5d4037;border-radius:12px;margin:16px;">
+        <strong>本页需要 JavaScript</strong> 才能显示 60 个游戏卡片。请在浏览器中启用 JavaScript 后刷新。
+      </div>
+    </noscript>
+
+    <footer>
+      游戏在文件夹 <strong>60款小游戏</strong> 内。请用 <strong>本地启动网站.bat</strong> 或任意静态服务器以 <strong>http</strong> 方式访问本站，不要仅靠双击 <strong>index.html</strong>（file 协议下游戏通常无法启动）。
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      if (window.location.protocol === "file:") {
+        var el = document.getElementById("fileProtocolNotice");
+        if (el) el.classList.add("file-notice--show");
+      }
+    })();
+
+    const categories = ["全部", "益智", "动作", "反应", "数学", "记忆"];
+
+    /** 与你的解压目录一一对应：建站目录 / 60款小游戏 / 「文件夹名」/ index.html */
+    const gameFolders = [
+      "1-僵尸鸭猎手",
+      "2-斯瓦特大战僵尸",
+      "3-坦克大战",
+      "4-木乃伊糖果",
+      "5-万圣节记忆",
+      "6-毁灭僵尸",
+      "7-粘猴手机游戏",
+      "8-水暖工",
+      "9-黄金矿工",
+      "10-逃亡",
+      "11-水果馅饼",
+      "12-砌砖",
+      "13-流浪者大战僵尸",
+      "14-万圣节泡泡枪手",
+      "15-忍者冒险小游戏",
+      "16-赌场卡记忆",
+      "17-吃水果的蛇",
+      "18-坦克防御兵",
+      "19-捕鱼狂",
+      "20-疯狂跑步者",
+      "21-航天飞机",
+      "22-超级牛仔跑",
+      "23-猎鸭者",
+      "24-交通赛车",
+      "25-女孩打扮",
+      "26-烛光超线",
+      "27-果冻3",
+      "28-射击强盗",
+      "29-僵尸枪手",
+      "30-圣诞熊猫跑步",
+      "31-速度赛车",
+      "32-圣诞比赛",
+      "33-圣诞气球",
+      "34-儿童真彩色",
+      "35-空战",
+      "36-狂鲨任务",
+      "37-棍兵",
+      "38-泡泡教授",
+      "39-忍者游戏",
+      "40-糖果比赛3",
+      "41-超彩色线",
+      "42-触球",
+      "43-快骰子",
+      "44-气球天堂",
+      "45-热珠宝",
+      "46-笑脸微笑小游戏",
+      "47-儿童数学游戏",
+      "48-僵尸起义",
+      "49-超级目标",
+      "50-超级跑车拼图",
+      "51-儿童纵横填字游戏",
+      "52-希塔洛契卡",
+      "53-汽车物理学",
+      "54-机器人X",
+      "55-记忆游戏",
+      "56-卡通糖果- MatCH3",
+      "57-弹力球",
+      "58-跳动弹跳",
+      "59-鱼类世界- MatCH3",
+      "60-复活节记忆"
+    ];
+
+    function folderToTitle(folder) {
+      return folder.replace(/^\d+-/, "");
+    }
+
+    function buildGameUrl(folder) {
+      return "./60款小游戏/" + encodeURIComponent(folder) + "/index.html";
+    }
+
+    /** 粗略分类，方便筛选；需要更准可逐项改 category */
+    function guessCategory(title) {
+      if (/数学/.test(title)) return "数学";
+      if (/记忆|万圣节记忆|赌场|复活节/.test(title)) return "记忆";
+      if (/赛车|跑|逃亡|空战|坦克|射击|僵尸|猎|捕鱼|航天|牛仔|交通|起义|枪手|防御|狂鲨|机器人|棍兵|速度|弹力|弹跳|跳动|超级目标/.test(title)) return "动作";
+      if (/拼图|填字|彩色|糖果|果冻|水果|气球|泡泡|砌砖|水暖工|矿工|馅饼|烛光|教授|粘猴|热珠宝|鱼类|卡通|儿童真彩色|赌场卡记忆/.test(title)) return "益智";
+      return "反应";
+    }
+
+    const gameList = gameFolders.map((folder, index) => {
+      const title = folderToTitle(folder);
+      return {
+        id: index + 1,
+        title,
+        category: guessCategory(title),
+        desc: "点击「开始游戏」即可在当前窗口打开；建议家长陪同下游玩。",
+        url: buildGameUrl(folder)
+      };
+    });
+
+    const categoryBar = document.getElementById("categoryBar");
+    const search = document.getElementById("search");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const gamesGrid = document.getElementById("gamesGrid");
+    const resultInfo = document.getElementById("resultInfo");
+    let activeCategory = "全部";
+
+    function renderCategoryChips() {
+      categoryBar.innerHTML = "";
+      categories.forEach((c) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "chip" + (c === activeCategory ? " active" : "");
+        b.textContent = c;
+        b.addEventListener("click", () => {
+          activeCategory = c;
+          renderCategoryChips();
+          renderGames();
+        });
+        categoryBar.appendChild(b);
+      });
+    }
+
+    function getFilteredGames() {
+      const kw = search.value.trim().toLowerCase();
+      return gameList.filter((game) => {
+        const categoryOk = activeCategory === "全部" || game.category === activeCategory;
+        const keywordOk = !kw || game.title.toLowerCase().includes(kw) || game.desc.toLowerCase().includes(kw);
+        return categoryOk && keywordOk;
+      });
+    }
+
+    function renderGames(targetList) {
+      const list = targetList || getFilteredGames();
+      gamesGrid.innerHTML = "";
+      var fb = document.getElementById("jsFallback");
+      if (fb) fb.remove();
+
+      if (list.length === 0) {
+        gamesGrid.innerHTML = "<div class='empty'>没有找到对应游戏，换个关键词试试吧。</div>";
+        resultInfo.textContent = "当前结果：0 款";
+        return;
+      }
+
+      list.forEach((game) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML =
+          "<span class='badge'>" + game.category + "</span>" +
+          "<h3>" + game.title + "</h3>" +
+          "<p>" + game.desc + "</p>" +
+          "<a class='play' href='" + game.url + "'>开始游戏</a>";
+        gamesGrid.appendChild(card);
+      });
+
+      resultInfo.textContent = "当前结果：" + list.length + " 款";
+    }
+
+    function randomPick(items, count) {
+      const copied = [...items];
+      copied.sort(() => Math.random() - 0.5);
+      return copied.slice(0, count);
+    }
+
+    search.addEventListener("input", () => renderGames());
+    shuffleBtn.addEventListener("click", () => {
+      const candidates = getFilteredGames();
+      renderGames(randomPick(candidates, Math.min(6, candidates.length)));
+      resultInfo.textContent += "（随机推荐）";
+    });
+
+    try {
+      renderCategoryChips();
+      renderGames();
+    } catch (e) {
+      resultInfo.textContent = "页面脚本出错，无法生成列表。请按 F12 打开「控制台」查看红色报错，或换浏览器重试。";
+      gamesGrid.innerHTML =
+        "<div class='empty'>错误信息（可截图发给他人排查）：<br><code style='word-break:break-all'>" +
+        String(e && e.message ? e.message : e) +
+        "</code></div>";
+    }
+  </script>
+</body>
+</html>
