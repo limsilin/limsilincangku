@@ -3,240 +3,743 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>小朋友小游戏乐园</title>
+  <title>林澌潾的第一个游戏网站</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #eaf6ff;
-      --card: #ffffff;
-      --text: #16588d;
-      --primary: #2c9df2;
-      --primary-dark: #0b7ad0;
-      --accent: #ffe27a;
-      --ok: #12b981;
-      --shadow: 0 8px 20px rgba(36, 114, 180, 0.12);
+      --bg-start: #0f0c29;
+      --bg-mid: #302b63;
+      --bg-end: #24243e;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --accent-pink: #ff6b9d;
+      --accent-cyan: #00d4ff;
+      --accent-yellow: #ffd93d;
+      --accent-green: #6bcb77;
+      --accent-purple: #a855f7;
+      --accent-orange: #ff8c42;
+      --accent-blue: #4facfe;
     }
+
     * {
       box-sizing: border-box;
-    }
-    body {
       margin: 0;
-      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #f4fbff 0%, var(--bg) 55%, #d7ecff 100%);
-      color: var(--text);
+      padding: 0;
     }
+
+    body {
+      font-family: 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    /* 动态粒子背景 */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      animation: float 15s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+    }
+
+    /* 顶部导航光效 */
+    .nav-glow {
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 20%, rgba(255, 107, 157, 0.15) 0%, transparent 40%),
+                  radial-gradient(circle at 70% 80%, rgba(0, 212, 255, 0.15) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+      animation: glowMove 20s ease-in-out infinite;
+    }
+
+    @keyframes glowMove {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-5%, -5%); }
+    }
+
     .container {
-      max-width: 1160px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 24px 18px 44px;
+      padding: 100px 24px 60px;
+      position: relative;
+      z-index: 1;
     }
+
+    /* 主标题区域 */
     .hero {
-      background: linear-gradient(135deg, #6dc7ff, #70a8ff);
-      border-radius: 24px;
-      padding: 28px 20px;
-      color: #fff;
-      box-shadow: var(--shadow);
+      text-align: center;
+      margin-bottom: 50px;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(0, 212, 255, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      color: var(--accent-cyan);
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-cyan), var(--accent-yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      text-shadow: 0 0 60px rgba(255, 107, 157, 0.5);
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
       text-align: center;
     }
-    .hero h1 {
-      margin: 0;
-      font-size: clamp(1.7rem, 4vw, 2.4rem);
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .hero p {
-      margin: 10px 0 0;
-      font-size: 1.05rem;
-      opacity: 0.96;
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
     }
+
+    /* 分类标签区域 */
     .toolbar {
-      margin-top: 18px;
-      display: grid;
-      gap: 10px;
-      grid-template-columns: 1fr;
-      background: #fff8d3;
-      border: 2px solid #ffe9a8;
-      border-radius: 16px;
-      padding: 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(20px);
+      animation: fadeInUp 0.8s ease-out 0.2s both;
     }
-    .toolbar-row {
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .category-tabs {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .chip, .btn {
-      border: none;
-      border-radius: 999px;
-      padding: 9px 14px;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: transform 0.15s ease, background 0.2s ease;
-    }
-    .chip {
-      background: #fff;
-      color: #1f4f7a;
-      border: 1px solid #d7e6f5;
-    }
-    .chip.active {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-    }
-    .chip:hover, .btn:hover {
-      transform: translateY(-1px);
-    }
-    #search {
-      width: 260px;
-      max-width: 100%;
-      border: 1px solid #cae0f3;
-      background: #fff;
-      border-radius: 999px;
-      padding: 9px 14px;
-      outline: none;
-      font-size: 0.95rem;
-      color: #285a83;
-    }
-    .btn {
-      background: var(--ok);
-      color: #fff;
-      font-weight: 600;
-    }
-    .btn:hover {
-      background: #0da06f;
-    }
-    .tips {
-      margin-top: 8px;
-      font-size: 0.93rem;
-      color: #6c7b88;
-    }
-    .games {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
       gap: 12px;
+      justify-content: center;
+      margin-bottom: 24px;
     }
-    .card {
-      background: var(--card);
-      border-radius: 14px;
-      padding: 12px;
-      box-shadow: var(--shadow);
-      border: 1px solid #d9e9f8;
+
+    .category-tab {
       display: flex;
-      flex-direction: column;
-      min-height: 190px;
-    }
-    .badge {
-      align-self: start;
-      background: var(--accent);
-      color: #6a5400;
-      border-radius: 999px;
-      padding: 5px 9px;
-      font-size: 0.8rem;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid transparent;
+      border-radius: 50px;
+      color: var(--text-secondary);
       font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 1rem;
     }
+
+    .category-tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .category-tab.active {
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      color: white;
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(255, 107, 157, 0.4);
+    }
+
+    .category-tab .icon {
+      font-size: 1.3rem;
+    }
+
+    .category-tab .count {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      flex: 1;
+      max-width: 400px;
+      min-width: 280px;
+    }
+
+    .search-input-wrapper::before {
+      content: "🔍";
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+    }
+
+    #search {
+      width: 100%;
+      padding: 16px 20px 16px 50px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      font-size: 1rem;
+      color: white;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    #search::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    #search:focus {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 212, 255, 0.1);
+      box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+    }
+
+    .btn-shuffle {
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--accent-yellow), var(--accent-orange));
+      border: none;
+      border-radius: 50px;
+      color: #1a1a2e;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-shuffle:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 40px rgba(255, 217, 61, 0.4);
+    }
+
+    .btn-shuffle:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    /* 游戏网格 */
+    .games {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    /* 游戏卡片 */
+    .card {
+      position: relative;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(20px);
+      cursor: pointer;
+      opacity: 0;
+      animation: cardEnter 0.6s ease-out forwards;
+    }
+
+    @keyframes cardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) rotateX(5deg);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3),
+                  0 0 60px rgba(255, 107, 157, 0.2),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    /* 卡片封面图 */
+    .card-thumbnail {
+      width: 100%;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-thumbnail::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(to top, rgba(15, 12, 41, 0.8), transparent);
+    }
+
+    .card-content {
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .badge-puzzle { background: linear-gradient(135deg, rgba(255, 107, 157, 0.3), rgba(168, 85, 247, 0.3)); color: var(--accent-pink); }
+    .badge-action { background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(79, 172, 254, 0.3)); color: var(--accent-cyan); }
+    .badge-reflex { background: linear-gradient(135deg, rgba(255, 217, 61, 0.3), rgba(255, 140, 66, 0.3)); color: var(--accent-yellow); }
+    .badge-math { background: linear-gradient(135deg, rgba(107, 203, 119, 0.3), rgba(0, 212, 255, 0.3)); color: var(--accent-green); }
+    .badge-memory { background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(255, 107, 157, 0.3)); color: var(--accent-purple); }
+
     .card h3 {
-      margin: 9px 0 6px;
-      font-size: 1.04rem;
-      color: #185385;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: white;
+      transition: color 0.3s ease;
     }
+
+    .card:hover h3 {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
     .card p {
-      margin: 0 0 12px;
-      color: #5f7a90;
+      color: var(--text-secondary);
       font-size: 0.9rem;
-      line-height: 1.45;
-      flex-grow: 1;
+      line-height: 1.5;
+      margin-bottom: 16px;
     }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-number {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
     .play {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: white;
       text-decoration: none;
-      display: inline-block;
-      text-align: center;
-      background: var(--primary);
-      color: #fff;
-      border-radius: 10px;
-      padding: 9px 10px;
-      font-weight: 600;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
+
+    .play::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .play:hover::before {
+      left: 100%;
+    }
+
     .play:hover {
-      background: var(--primary-dark);
+      transform: scale(1.05);
+      box-shadow: 0 8px 30px rgba(0, 212, 255, 0.5);
     }
-    footer {
-      margin-top: 20px;
-      text-align: center;
-      color: #68869f;
-      font-size: 0.88rem;
+
+    /* 悬浮装饰 */
+    .floating-icon {
+      position: fixed;
+      font-size: 2rem;
+      opacity: 0.1;
+      animation: floatAround 20s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
     }
+
+    @keyframes floatAround {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(100px, -50px) rotate(90deg); }
+      50% { transform: translate(-50px, 100px) rotate(180deg); }
+      75% { transform: translate(-100px, -100px) rotate(270deg); }
+    }
+
+    /* 空状态 */
     .empty {
-      text-align: center;
-      color: #557898;
-      padding: 26px 8px;
-      background: #ffffffbe;
-      border-radius: 12px;
-      border: 1px dashed #c8def0;
       grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 40px;
+      background: var(--card-bg);
+      border: 2px dashed var(--card-border);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
     }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .empty h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .empty p {
+      color: var(--text-secondary);
+    }
+
+    /* 结果信息 */
+    .result-info {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      padding: 16px;
+      background: var(--card-bg);
+      border-radius: 50px;
+      display: inline-block;
+      backdrop-filter: blur(10px);
+    }
+
+    /* 页脚 */
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      padding: 30px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--card-border);
+    }
+
+    footer a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* 文件协议提示 */
     .file-notice {
       display: none;
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: #fff3e0;
-      border: 2px solid #ffb74d;
-      color: #5d4037;
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255, 183, 77, 0.2), rgba(255, 140, 66, 0.2));
+      border: 2px solid rgba(255, 183, 77, 0.5);
+      color: var(--text-primary);
       text-align: left;
-      line-height: 1.55;
-      font-size: 0.95rem;
+      line-height: 1.6;
     }
+
     .file-notice strong {
-      color: #bf360c;
+      color: var(--accent-yellow);
     }
+
     .file-notice code {
-      background: #fff8e1;
-      padding: 2px 6px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px 8px;
       border-radius: 4px;
-      font-size: 0.88em;
+      font-family: monospace;
     }
+
     .file-notice.file-notice--show {
       display: block;
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .container {
+        padding: 80px 16px 40px;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .stats {
+        gap: 24px;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+      }
+
+      .category-tab {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+      }
+
+      .games {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .card-thumbnail {
+        height: 140px;
+        font-size: 3rem;
+      }
+    }
+
+    /* 滚动条美化 */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-start);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(var(--accent-pink), var(--accent-purple));
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(var(--accent-cyan), var(--accent-blue));
     }
   </style>
 </head>
 <body>
+  <!-- 动态粒子背景 -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- 顶部光效 -->
+  <div class="nav-glow"></div>
+
+  <!-- 悬浮装饰图标 -->
+  <div class="floating-icon" style="top: 20%; left: 5%;">🎮</div>
+  <div class="floating-icon" style="top: 60%; left: 8%; animation-delay: -5s;">🎯</div>
+  <div class="floating-icon" style="top: 30%; right: 5%; animation-delay: -10s;">🧩</div>
+  <div class="floating-icon" style="top: 70%; right: 10%; animation-delay: -15s;">🎲</div>
+  <div class="floating-icon" style="top: 15%; right: 15%; animation-delay: -8s;">⭐</div>
+
   <div class="container">
+    <!-- 文件协议提示 -->
     <div id="fileProtocolNotice" class="file-notice" role="alert">
-      <strong>当前是用「本机文件」打开的（地址栏是 file:/// 开头）。</strong> 你能看到游戏标题，但点「开始游戏」进去的仍是 file 协议，<strong>游戏画面会黑屏或不显示</strong>。<br />
-      正确做法：关闭本页，在本文件夹双击 <strong>本地启动网站.bat</strong>，等浏览器自动打开 <code>http://127.0.0.1:8765/index.html</code>（必须是 http），再点游戏。已装 Node 但没装 Python 时，脚本会自动用 <code>npx serve</code>。上传到 GitHub Pages 后同样用 http 访问即可。
+      <strong>⚠️ 当前使用「本机文件」打开</strong><br>
+      游戏画面可能无法显示。<br>
+      请关闭本页，双击 <strong>本地启动网站.bat</strong>，等浏览器自动打开 <code>http://127.0.0.1:8765/index.html</code>
     </div>
+
+    <!-- 主标题区域 -->
     <header class="hero">
-      <h1>小朋友小游戏乐园</h1>
-      <p>精选益智小游戏，安全轻松，打开就能玩。</p>
+      <div class="hero-badge">
+        <span>🎮</span>
+        <span>精彩游戏 快乐童年</span>
+      </div>
+      <h1>林澌潾的第一个游戏网站</h1>
+      <p>分享快乐，分享游戏，一起享受美好的游戏时光</p>
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-number" id="totalGames">60</div>
+          <div class="stat-label">精选游戏</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">6</div>
+          <div class="stat-label">游戏分类</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">免费畅玩</div>
+        </div>
+      </div>
     </header>
 
+    <!-- 筛选工具栏 -->
     <section class="toolbar" aria-label="筛选区域">
-      <div class="toolbar-row" id="categoryBar"></div>
-      <div class="toolbar-row">
-        <input id="search" type="text" placeholder="搜索游戏名，例如：拼图" />
-        <button class="btn" id="shuffleBtn" type="button">随机推荐 6 款</button>
+      <div class="category-tabs" id="categoryBar"></div>
+      <div class="search-bar">
+        <div class="search-input-wrapper">
+          <input id="search" type="text" placeholder="搜索你喜欢的游戏..." />
+        </div>
+        <button class="btn-shuffle" id="shuffleBtn" type="button">
+          <span>🎲</span>
+          <span>随机推荐</span>
+        </button>
       </div>
-      <div class="tips" id="resultInfo">正在加载游戏列表...</div>
     </section>
 
+    <!-- 结果信息 -->
+    <div style="text-align: center;">
+      <span class="result-info" id="resultInfo">正在加载游戏列表...</span>
+    </div>
+
+    <!-- 游戏网格 -->
     <main>
       <section class="games" id="gamesGrid" aria-live="polite">
         <div id="jsFallback" class="empty">
-          正在加载游戏列表… 若长时间只有本段文字，多半是<strong>浏览器禁用了 JavaScript</strong>，请到浏览器设置里允许脚本，或换用 Chrome / Edge 再试。
+          <div class="empty-icon">🎮</div>
+          <h3>正在加载游戏列表</h3>
+          <p>若长时间只有本段文字，请检查浏览器是否启用了 JavaScript</p>
         </div>
       </section>
     </main>
+
     <noscript>
-      <div class="container" style="padding:20px;background:#fff3e0;color:#5d4037;border-radius:12px;margin:16px;">
-        <strong>本页需要 JavaScript</strong> 才能显示 60 个游戏卡片。请在浏览器中启用 JavaScript 后刷新。
+      <div class="empty">
+        <div class="empty-icon">⚠️</div>
+        <h3>需要 JavaScript</h3>
+        <p>请在浏览器设置中允许脚本运行，或换用 Chrome / Edge</p>
       </div>
     </noscript>
 
+    <!-- 页脚 -->
     <footer>
-      游戏在文件夹 <strong>60款小游戏</strong> 内。请用 <strong>本地启动网站.bat</strong> 或任意静态服务器以 <strong>http</strong> 方式访问本站，不要仅靠双击 <strong>index.html</strong>（file 协议下游戏通常无法启动）。
+      <p>游戏在文件夹 <strong>60款小游戏</strong> 内 | 建议使用 <strong>本地启动网站.bat</strong> 启动</p>
+      <p style="margin-top: 10px;">Made with ❤️ for kids</p>
     </footer>
   </div>
 
   <script>
+    // 创建粒子背景
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const colors = ['#ff6b9d', '#00d4ff', '#ffd93d', '#a855f7', '#6bcb77'];
+      
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+        particle.style.width = (4 + Math.random() * 6) + 'px';
+        particle.style.height = particle.style.width;
+        container.appendChild(particle);
+      }
+    }
+    createParticles();
+
+    // 文件协议检测
     (function () {
       if (window.location.protocol === "file:") {
         var el = document.getElementById("fileProtocolNotice");
@@ -244,70 +747,110 @@
       }
     })();
 
-    const categories = ["全部", "益智", "动作", "反应", "数学", "记忆"];
+    // 分类配置
+    const categories = [
+      { name: "全部", icon: "🎯", color: "linear-gradient(135deg, #ff6b9d, #a855f7)" },
+      { name: "益智", icon: "🧩", color: "linear-gradient(135deg, #ff6b9d, #ff8c42)" },
+      { name: "动作", icon: "🎮", color: "linear-gradient(135deg, #00d4ff, #4facfe)" },
+      { name: "反应", icon: "⚡", color: "linear-gradient(135deg, #ffd93d, #ff8c42)" },
+      { name: "数学", icon: "🔢", color: "linear-gradient(135deg, #6bcb77, #00d4ff)" },
+      { name: "记忆", icon: "🧠", color: "linear-gradient(135deg, #a855f7, #ff6b9d)" }
+    ];
 
-    /** 与你的解压目录一一对应：建站目录 / 60款小游戏 / 「文件夹名」/ index.html */
+    // 游戏缩略图配置
+    const thumbnails = {
+      "僵尸鸭猎手": "🦆💀",
+      "斯瓦特大战僵尸": "🧟⚔️",
+      "坦克大战": "🎖️🚂",
+      "木乃伊糖果": "🧟🍬",
+      "万圣节记忆": "🎃👻",
+      "毁灭僵尸": "💥🧟",
+      "粘猴手机游戏": "🐒📱",
+      "水暖工": "🔧💧",
+      "黄金矿工": "⛏️💰",
+      "逃亡": "🏃‍♂️🚨",
+      "水果馅饼": "🍓🥧",
+      "砌砖": "🧱🏗️",
+      "流浪者大战僵尸": "⚔️🧟",
+      "万圣节泡泡枪手": "🎃🫧",
+      "忍者冒险小游戏": "🥷⚔️",
+      "赌场卡记忆": "🃏🎰",
+      "吃水果的蛇": "🐍🍎",
+      "坦克防御兵": "🛡️🚂",
+      "捕鱼狂": "🎣🐟",
+      "疯狂跑步者": "🏃💨",
+      "航天飞机": "🚀✈️",
+      "超级牛仔跑": "🤠🐎",
+      "猎鸭者": "🔫🦆",
+      "交通赛车": "🏎️🚦",
+      "女孩打扮": "👸💄",
+      "烛光超线": "🕯️✨",
+      "果冻3": "🍮🎮",
+      "射击强盗": "🔫💰",
+      "僵尸枪手": "🧟🔫",
+      "圣诞熊猫跑步": "🐼🎄",
+      "速度赛车": "🏎️💨",
+      "圣诞比赛": "🎄🏃",
+      "圣诞气球": "🎈🎄",
+      "儿童真彩色": "🎨🌈",
+      "空战": "✈️💥",
+      "狂鲨任务": "🦈⚔️",
+      "棍兵": "🏏⚔️",
+      "泡泡教授": "🫧👨‍🔬",
+      "忍者游戏": "🥷🎮",
+      "糖果比赛3": "🍬🏃",
+      "超彩色线": "🌈✨",
+      "触球": "🏐⚡",
+      "快骰子": "🎲⚡",
+      "气球天堂": "🎈🌟",
+      "热珠宝": "💎🔥",
+      "笑脸微笑小游戏": "😊🎮",
+      "儿童数学游戏": "🔢➕",
+      "僵尸起义": "🧟⚔️",
+      "超级目标": "🎯⭐",
+      "超级跑车拼图": "🏎️🧩",
+      "儿童纵横填字游戏": "📝🔤",
+      "希塔洛契卡": "🐱🎮",
+      "汽车物理学": "🚗⚙️",
+      "机器人X": "🤖❌",
+      "记忆游戏": "🧠🎴",
+      "卡通糖果": "🧸🍬",
+      "卡通糖果- MatCH3": "🧸🍬",
+      "弹力球": "🏓💪",
+      "跳动弹跳": "🦘⬆️",
+      "鱼类世界": "🐠🌊",
+      "鱼类世界- MatCH3": "🐠🌊",
+      "复活节记忆": "🐰🥚"
+    };
+
+    // 游戏缩略图背景色
+    const thumbnailBg = [
+      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+      "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+      "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+      "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+      "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
+      "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)",
+      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "linear-gradient(135deg, #ff6b9d 0%, #c44569 100%)",
+      "linear-gradient(135deg, #00d4ff 0%, #0abde3 100%)"
+    ];
+
+    /** 游戏数据 */
     const gameFolders = [
-      "1-僵尸鸭猎手",
-      "2-斯瓦特大战僵尸",
-      "3-坦克大战",
-      "4-木乃伊糖果",
-      "5-万圣节记忆",
-      "6-毁灭僵尸",
-      "7-粘猴手机游戏",
-      "8-水暖工",
-      "9-黄金矿工",
-      "10-逃亡",
-      "11-水果馅饼",
-      "12-砌砖",
-      "13-流浪者大战僵尸",
-      "14-万圣节泡泡枪手",
-      "15-忍者冒险小游戏",
-      "16-赌场卡记忆",
-      "17-吃水果的蛇",
-      "18-坦克防御兵",
-      "19-捕鱼狂",
-      "20-疯狂跑步者",
-      "21-航天飞机",
-      "22-超级牛仔跑",
-      "23-猎鸭者",
-      "24-交通赛车",
-      "25-女孩打扮",
-      "26-烛光超线",
-      "27-果冻3",
-      "28-射击强盗",
-      "29-僵尸枪手",
-      "30-圣诞熊猫跑步",
-      "31-速度赛车",
-      "32-圣诞比赛",
-      "33-圣诞气球",
-      "34-儿童真彩色",
-      "35-空战",
-      "36-狂鲨任务",
-      "37-棍兵",
-      "38-泡泡教授",
-      "39-忍者游戏",
-      "40-糖果比赛3",
-      "41-超彩色线",
-      "42-触球",
-      "43-快骰子",
-      "44-气球天堂",
-      "45-热珠宝",
-      "46-笑脸微笑小游戏",
-      "47-儿童数学游戏",
-      "48-僵尸起义",
-      "49-超级目标",
-      "50-超级跑车拼图",
-      "51-儿童纵横填字游戏",
-      "52-希塔洛契卡",
-      "53-汽车物理学",
-      "54-机器人X",
-      "55-记忆游戏",
-      "56-卡通糖果- MatCH3",
-      "57-弹力球",
-      "58-跳动弹跳",
-      "59-鱼类世界- MatCH3",
-      "60-复活节记忆"
+      "1-僵尸鸭猎手", "2-斯瓦特大战僵尸", "3-坦克大战", "4-木乃伊糖果", "5-万圣节记忆",
+      "6-毁灭僵尸", "7-粘猴手机游戏", "8-水暖工", "9-黄金矿工", "10-逃亡",
+      "11-水果馅饼", "12-砌砖", "13-流浪者大战僵尸", "14-万圣节泡泡枪手", "15-忍者冒险小游戏",
+      "16-赌场卡记忆", "17-吃水果的蛇", "18-坦克防御兵", "19-捕鱼狂", "20-疯狂跑步者",
+      "21-航天飞机", "22-超级牛仔跑", "23-猎鸭者", "24-交通赛车", "25-女孩打扮",
+      "26-烛光超线", "27-果冻3", "28-射击强盗", "29-僵尸枪手", "30-圣诞熊猫跑步",
+      "31-速度赛车", "32-圣诞比赛", "33-圣诞气球", "34-儿童真彩色", "35-空战",
+      "36-狂鲨任务", "37-棍兵", "38-泡泡教授", "39-忍者游戏", "40-糖果比赛3",
+      "41-超彩色线", "42-触球", "43-快骰子", "44-气球天堂", "45-热珠宝",
+      "46-笑脸微笑小游戏", "47-儿童数学游戏", "48-僵尸起义", "49-超级目标", "50-超级跑车拼图",
+      "51-儿童纵横填字游戏", "52-希塔洛契卡", "53-汽车物理学", "54-机器人X", "55-记忆游戏",
+      "56-卡通糖果", "57-弹力球", "58-跳动弹跳", "59-鱼类世界", "60-复活节记忆"
     ];
 
     function folderToTitle(folder) {
@@ -318,7 +861,6 @@
       return "./60款小游戏/" + encodeURIComponent(folder) + "/index.html";
     }
 
-    /** 粗略分类，方便筛选；需要更准可逐项改 category */
     function guessCategory(title) {
       if (/数学/.test(title)) return "数学";
       if (/记忆|万圣节记忆|赌场|复活节/.test(title)) return "记忆";
@@ -327,16 +869,43 @@
       return "反应";
     }
 
+    function getThumbnail(title) {
+      return thumbnails[title] || "🎮";
+    }
+
+    function getThumbnailBg(id) {
+      return thumbnailBg[(id - 1) % thumbnailBg.length];
+    }
+
+    function getBadgeClass(category) {
+      const map = {
+        "益智": "badge-puzzle",
+        "动作": "badge-action",
+        "反应": "badge-reflex",
+        "数学": "badge-math",
+        "记忆": "badge-memory"
+      };
+      return map[category] || "badge-puzzle";
+    }
+
     const gameList = gameFolders.map((folder, index) => {
       const title = folderToTitle(folder);
       return {
         id: index + 1,
         title,
         category: guessCategory(title),
-        desc: "点击「开始游戏」即可在当前窗口打开；建议家长陪同下游玩。",
-        url: buildGameUrl(folder)
+        desc: "点击开始游戏即可在当前窗口打开，建议家长陪同下游玩。",
+        url: buildGameUrl(folder),
+        thumbnail: getThumbnail(title),
+        thumbnailBg: getThumbnailBg(index + 1)
       };
     });
+
+    // 统计每个分类的数量
+    function getCategoryCount(categoryName) {
+      if (categoryName === "全部") return gameList.length;
+      return gameList.filter(g => g.category === categoryName).length;
+    }
 
     const categoryBar = document.getElementById("categoryBar");
     const search = document.getElementById("search");
@@ -347,17 +916,27 @@
 
     function renderCategoryChips() {
       categoryBar.innerHTML = "";
-      categories.forEach((c) => {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "chip" + (c === activeCategory ? " active" : "");
-        b.textContent = c;
-        b.addEventListener("click", () => {
-          activeCategory = c;
+      categories.forEach((cat) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        const isActive = cat.name === activeCategory;
+        btn.className = "category-tab" + (isActive ? " active" : "");
+        
+        const count = getCategoryCount(cat.name);
+        
+        btn.innerHTML = `
+          <span class="icon">${cat.icon}</span>
+          <span>${cat.name}</span>
+          <span class="count">${count}</span>
+        `;
+        
+        btn.addEventListener("click", () => {
+          activeCategory = cat.name;
           renderCategoryChips();
           renderGames();
         });
-        categoryBar.appendChild(b);
+        
+        categoryBar.appendChild(btn);
       });
     }
 
@@ -365,7 +944,7 @@
       const kw = search.value.trim().toLowerCase();
       return gameList.filter((game) => {
         const categoryOk = activeCategory === "全部" || game.category === activeCategory;
-        const keywordOk = !kw || game.title.toLowerCase().includes(kw) || game.desc.toLowerCase().includes(kw);
+        const keywordOk = !kw || game.title.toLowerCase().includes(kw);
         return categoryOk && keywordOk;
       });
     }
@@ -373,27 +952,50 @@
     function renderGames(targetList) {
       const list = targetList || getFilteredGames();
       gamesGrid.innerHTML = "";
+      
       var fb = document.getElementById("jsFallback");
       if (fb) fb.remove();
 
       if (list.length === 0) {
-        gamesGrid.innerHTML = "<div class='empty'>没有找到对应游戏，换个关键词试试吧。</div>";
+        gamesGrid.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">🔍</div>
+            <h3>没有找到对应游戏</h3>
+            <p>换个关键词试试吧，或者点击「随机推荐」发现惊喜</p>
+          </div>
+        `;
         resultInfo.textContent = "当前结果：0 款";
         return;
       }
 
-      list.forEach((game) => {
+      list.forEach((game, index) => {
         const card = document.createElement("article");
         card.className = "card";
-        card.innerHTML =
-          "<span class='badge'>" + game.category + "</span>" +
-          "<h3>" + game.title + "</h3>" +
-          "<p>" + game.desc + "</p>" +
-          "<a class='play' href='" + game.url + "'>开始游戏</a>";
+        card.style.animationDelay = (index * 0.08) + "s";
+        
+        card.innerHTML = `
+          <div class="card-thumbnail" style="background: ${game.thumbnailBg}">
+            <span>${game.thumbnail}</span>
+          </div>
+          <div class="card-content">
+            <span class="card-badge ${getBadgeClass(game.category)}">${game.category}</span>
+            <h3>${game.title}</h3>
+            <p>${game.desc}</p>
+            <div class="card-footer">
+              <span class="card-number">#${String(game.id).padStart(2, '0')}</span>
+              <a class="play" href="${game.url}">
+                <span>▶</span>
+                <span>开始游戏</span>
+              </a>
+            </div>
+          </div>
+        `;
+        
         gamesGrid.appendChild(card);
       });
 
-      resultInfo.textContent = "当前结果：" + list.length + " 款";
+      const categoryText = activeCategory === "全部" ? "全部游戏" : activeCategory + "类";
+      resultInfo.textContent = `正在展示 ${categoryText}：${list.length} 款`;
     }
 
     function randomPick(items, count) {
@@ -406,18 +1008,21 @@
     shuffleBtn.addEventListener("click", () => {
       const candidates = getFilteredGames();
       renderGames(randomPick(candidates, Math.min(6, candidates.length)));
-      resultInfo.textContent += "（随机推荐）";
+      resultInfo.textContent = `🎲 随机推荐 ${Math.min(6, candidates.length)} 款精彩游戏`;
     });
 
     try {
       renderCategoryChips();
       renderGames();
     } catch (e) {
-      resultInfo.textContent = "页面脚本出错，无法生成列表。请按 F12 打开「控制台」查看红色报错，或换浏览器重试。";
-      gamesGrid.innerHTML =
-        "<div class='empty'>错误信息（可截图发给他人排查）：<br><code style='word-break:break-all'>" +
-        String(e && e.message ? e.message : e) +
-        "</code></div>";
+      resultInfo.textContent = "页面加载出错，请刷新重试。";
+      gamesGrid.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">⚠️</div>
+          <h3>加载出错</h3>
+          <p>错误信息：${e.message}</p>
+        </div>
+      `;
     }
   </script>
 </body>
