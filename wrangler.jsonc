@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "limsilincangku",
+  "compatibility_date": "2026-05-18",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "60款小游戏"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
