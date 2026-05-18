@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏集合 - 60个精彩小游戏</title>
+    <title>林澌潾的小游戏网站 - 60个精彩小游戏</title>
     <link rel="icon" href="./favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,426 +13,848 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
+        :root {
+            --pink: #ff6b9d;
+            --purple: #c44cff;
+            --blue: #4c9aff;
+            --cyan: #00d2ff;
+            --yellow: #ffd93d;
+            --green: #6bcb77;
+            --orange: #ff8c42;
+            --red: #ff5757;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        body {
+            font-family: 'Nunito', 'Microsoft YaHei', sans-serif;
+            background: #0f0c29;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ==================== 背景粒子 ==================== */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ==================== 浮动装饰 ==================== */
+        .float-shapes {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
             overflow: hidden;
+        }
+
+        .float-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg) scale(1); opacity: 0; }
+            10% { opacity: 0.15; }
+            90% { opacity: 0.15; }
+            100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+        }
+
+        /* ==================== 主容器 ==================== */
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        /* ==================== 顶部导航 ==================== */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 157, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 107, 157, 0.8), 0 0 60px rgba(196, 76, 255, 0.4); }
+        }
+
+        .logo-text h2 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--pink), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            font-weight: 600;
+        }
+
+        /* ==================== 搜索框 ==================== */
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 48px;
+            border-radius: 50px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s;
             backdrop-filter: blur(10px);
         }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .search-box input::placeholder { color: rgba(255,255,255,0.4); }
+
+        .search-box input:focus {
+            border-color: var(--pink);
+            background: rgba(255,255,255,0.12);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+        }
+
+        .search-box .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            opacity: 0.6;
+        }
+
+        /* ==================== 英雄标题区 ==================== */
+        .hero-section {
             text-align: center;
-            padding: 40px 20px;
+            padding: 40px 0 50px;
+            position: relative;
         }
 
-        .header h1 {
-            font-size: 3rem;
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 50px;
+            background: linear-gradient(90deg, rgba(255,107,157,0.2), rgba(196,76,255,0.2));
+            border: 1px solid rgba(255,255,255,0.15);
+            font-size: 0.85rem;
             font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            color: var(--pink);
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease both;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
+        .hero-title {
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            animation: fadeInDown 0.8s 0.2s ease both;
+        }
+
+        .hero-title .line1 {
+            display: block;
+            color: #fff;
+        }
+
+        .hero-title .line2 {
+            display: block;
+            background: linear-gradient(90deg, var(--pink), var(--orange), var(--yellow), var(--green), var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradientFlow 3s linear infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.55);
+            font-weight: 600;
+            animation: fadeInDown 0.8s 0.4s ease both;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            animation: fadeInDown 0.8s 0.6s ease both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* ==================== 分类标签 ==================== */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s 0.8s ease both;
+        }
+
+        .cat-btn {
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.88rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+        }
+
+        .cat-btn:hover, .cat-btn.active {
+            border-color: var(--pink);
+            background: linear-gradient(135deg, rgba(255,107,157,0.2), rgba(196,76,255,0.2));
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .cat-btn.active { color: var(--pink); }
+
+        /* ==================== 游戏网格 ==================== */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #fff;
+            animation: fadeInUp 0.6s ease both;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
         }
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
         }
 
+        /* ==================== 游戏卡片 ==================== */
         .game-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            position: relative;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.08);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            animation: cardAppear 0.5s ease both;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+
+        @keyframes cardAppear {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            border-color: #667eea;
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 107, 157, 0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(255,107,157,0.2);
         }
 
-        .game-card a {
-            text-decoration: none;
-            color: #333;
-            display: block;
-            font-size: 1.1rem;
+        .card-thumb {
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-thumb::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.3;
+        }
+
+        .card-info {
+            padding: 14px 16px;
+            position: relative;
+        }
+
+        .card-tag {
+            position: absolute;
+            top: -14px;
+            right: 16px;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-desc {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.45);
             font-weight: 600;
-            transition: color 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .game-card:hover a {
-            color: #667eea;
+        .card-play {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--pink);
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s;
         }
 
-        .game-number {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            width: 30px;
-            height: 30px;
+        .game-card:hover .card-play {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .card-shine {
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            transition: left 0.5s;
+            pointer-events: none;
+        }
+
+        .game-card:hover .card-shine { left: 160%; }
+
+        /* ==================== 无结果 ==================== */
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            display: none;
+        }
+
+        .no-results.visible { display: block; }
+
+        .no-results .emoji { font-size: 4rem; margin-bottom: 16px; }
+
+        .no-results p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.4);
+            font-weight: 600;
+        }
+
+        /* ==================== 页脚 ==================== */
+        .site-footer {
+            text-align: center;
+            padding: 40px 20px 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-divider {
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--pink), var(--purple), transparent);
+            margin: 0 auto 24px;
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .footer-links span {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.4);
+            font-weight: 600;
+        }
+
+        .footer-copy {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.25);
+        }
+
+        /* ==================== 回到顶部 ==================== */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-right: 10px;
-            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: #fff;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
+            transition: all 0.3s;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .footer {
-            background: #f8f9fa;
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            border-top: 1px solid #eee;
+        .back-to-top.show {
+            opacity: 1;
+            pointer-events: auto;
         }
 
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.6);
+        }
+
+        /* ==================== 动画 ==================== */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.15); }
+            70% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        /* ==================== 响应式 ==================== */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .games-grid {
-                grid-template-columns: 1fr;
-                padding: 20px;
-            }
+            .top-bar { flex-direction: column; gap: 16px; }
+            .search-box { width: 100%; }
+            .hero-stats { gap: 20px; }
+            .stat-num { font-size: 1.8rem; }
+            .games-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+            .card-thumb { height: 100px; font-size: 2.8rem; }
+            .hero-section { padding: 20px 0 30px; }
+        }
+
+        /* ==================== 选中高亮 ==================== */
+        ::selection {
+            background: var(--pink);
+            color: #fff;
+        }
+
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--pink), var(--purple));
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🎮 游戏集合</h1>
-            <p>60个精彩小游戏，总有一款适合您</p>
-        </div>
+    <canvas id="bg-canvas"></canvas>
+    <div class="float-shapes" id="floatShapes"></div>
 
-        <div class="games-grid">
-            <div class="game-card">
-                <a href="./1-僵尸鸭猎手/index.html" target="_blank">
-                    <span class="game-number">1</span>僵尸鸭猎手
-                </a>
+    <div class="main-wrapper">
+        <!-- 顶部栏 -->
+        <div class="top-bar">
+            <div class="logo-area">
+                <div class="logo-avatar">&#x1F389;</div>
+                <div class="logo-text">
+                    <h2>林澌潾的小游戏</h2>
+                    <span>&#x2728; 炫酷儿童游戏站</span>
+                </div>
             </div>
-            <div class="game-card">
-                <a href="./2-斯瓦特大战僵尸/index.html" target="_blank">
-                    <span class="game-number">2</span>斯瓦特大战僵尸
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./3-坦克大战/index.html" target="_blank">
-                    <span class="game-number">3</span>坦克大战
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./4-木乃伊糖果/index.html" target="_blank">
-                    <span class="game-number">4</span>木乃伊糖果
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./5-万圣节记忆/index.html" target="_blank">
-                    <span class="game-number">5</span>万圣节记忆
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./6-毁灭僵尸/index.html" target="_blank">
-                    <span class="game-number">6</span>毁灭僵尸
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./7-粘猴手机游戏/index.html" target="_blank">
-                    <span class="game-number">7</span>粘猴手机游戏
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./8-水暖工/index.html" target="_blank">
-                    <span class="game-number">8</span>水暖工
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./9-黄金矿工/index.html" target="_blank">
-                    <span class="game-number">9</span>黄金矿工
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./10-逃亡/index.html" target="_blank">
-                    <span class="game-number">10</span>逃亡
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./11-水果馅饼/index.html" target="_blank">
-                    <span class="game-number">11</span>水果馅饼
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./12-砌砖/index.html" target="_blank">
-                    <span class="game-number">12</span>砌砖
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./13-流浪者大战僵尸/index.html" target="_blank">
-                    <span class="game-number">13</span>流浪者大战僵尸
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./14-万圣节泡泡枪手/index.html" target="_blank">
-                    <span class="game-number">14</span>万圣节泡泡枪手
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./15-忍者冒险小游戏/index.html" target="_blank">
-                    <span class="game-number">15</span>忍者冒险小游戏
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./16-赌场卡记忆/index.html" target="_blank">
-                    <span class="game-number">16</span>赌场卡记忆
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./17-吃水果的蛇/index.html" target="_blank">
-                    <span class="game-number">17</span>吃水果的蛇
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./18-坦克防御兵/index.html" target="_blank">
-                    <span class="game-number">18</span>坦克防御兵
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./19-捕鱼狂/index.html" target="_blank">
-                    <span class="game-number">19</span>捕鱼狂
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./20-疯狂跑步者/index.html" target="_blank">
-                    <span class="game-number">20</span>疯狂跑步者
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./21-航天飞机/index.html" target="_blank">
-                    <span class="game-number">21</span>航天飞机
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./22-超级牛仔跑/index.html" target="_blank">
-                    <span class="game-number">22</span>超级牛仔跑
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./23-猎鸭者/index.html" target="_blank">
-                    <span class="game-number">23</span>猎鸭者
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./24-交通赛车/index.html" target="_blank">
-                    <span class="game-number">24</span>交通赛车
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./25-女孩打扮/index.html" target="_blank">
-                    <span class="game-number">25</span>女孩打扮
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./26-烛光超线/index.html" target="_blank">
-                    <span class="game-number">26</span>烛光超线
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./27-果冻3/index.html" target="_blank">
-                    <span class="game-number">27</span>果冻3
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./28-射击强盗/index.html" target="_blank">
-                    <span class="game-number">28</span>射击强盗
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./29-僵尸枪手/index.html" target="_blank">
-                    <span class="game-number">29</span>僵尸枪手
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./30-圣诞熊猫跑步/index.html" target="_blank">
-                    <span class="game-number">30</span>圣诞熊猫跑步
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./31-速度赛车/index.html" target="_blank">
-                    <span class="game-number">31</span>速度赛车
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./32-圣诞比赛/index.html" target="_blank">
-                    <span class="game-number">32</span>圣诞比赛
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./33-圣诞气球/index.html" target="_blank">
-                    <span class="game-number">33</span>圣诞气球
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./34-儿童真彩色/index.html" target="_blank">
-                    <span class="game-number">34</span>儿童真彩色
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./35-空战/index.html" target="_blank">
-                    <span class="game-number">35</span>空战
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./36-狂鲨任务/index.html" target="_blank">
-                    <span class="game-number">36</span>狂鲨任务
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./37-棍兵/index.html" target="_blank">
-                    <span class="game-number">37</span>棍兵
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./38-泡泡教授/index.html" target="_blank">
-                    <span class="game-number">38</span>泡泡教授
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./39-忍者游戏/index.html" target="_blank">
-                    <span class="game-number">39</span>忍者游戏
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./40-糖果比赛3/index.html" target="_blank">
-                    <span class="game-number">40</span>糖果比赛3
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./41-超彩色线/index.html" target="_blank">
-                    <span class="game-number">41</span>超彩色线
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./42-触球/index.html" target="_blank">
-                    <span class="game-number">42</span>触球
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./43-快骰子/index.html" target="_blank">
-                    <span class="game-number">43</span>快骰子
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./44-气球天堂/index.html" target="_blank">
-                    <span class="game-number">44</span>气球天堂
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./45-热珠宝/index.html" target="_blank">
-                    <span class="game-number">45</span>热珠宝
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./46-笑脸微笑小游戏/index.html" target="_blank">
-                    <span class="game-number">46</span>笑脸微笑小游戏
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./47-儿童数学游戏/index.html" target="_blank">
-                    <span class="game-number">47</span>儿童数学游戏
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./48-僵尸起义/index.html" target="_blank">
-                    <span class="game-number">48</span>僵尸起义
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./49-超级目标/index.html" target="_blank">
-                    <span class="game-number">49</span>超级目标
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./50-超级跑车拼图/index.html" target="_blank">
-                    <span class="game-number">50</span>超级跑车拼图
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./51-儿童纵横填字游戏/index.html" target="_blank">
-                    <span class="game-number">51</span>儿童纵横填字游戏
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./52-希塔洛契卡/index.html" target="_blank">
-                    <span class="game-number">52</span>希塔洛契卡
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./53-汽车物理学/index.html" target="_blank">
-                    <span class="game-number">53</span>汽车物理学
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./54-机器人X/index.html" target="_blank">
-                    <span class="game-number">54</span>机器人X
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./55-记忆游戏/index.html" target="_blank">
-                    <span class="game-number">55</span>记忆游戏
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./56-卡通糖果- MatCH3/index.html" target="_blank">
-                    <span class="game-number">56</span>卡通糖果- MatCH3
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./57-弹力球/index.html" target="_blank">
-                    <span class="game-number">57</span>弹力球
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./58-跳动弹跳/index.html" target="_blank">
-                    <span class="game-number">58</span>跳动弹跳
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./59-鱼类世界- MatCH3/index.html" target="_blank">
-                    <span class="game-number">59</span>鱼类世界- MatCH3
-                </a>
-            </div>
-            <div class="game-card">
-                <a href="./60-复活节记忆/index.html" target="_blank">
-                    <span class="game-number">60</span>复活节记忆
-                </a>
+            <div class="search-box">
+                <span class="search-icon">&#x1F50D;</span>
+                <input type="text" id="searchInput" placeholder="搜索游戏...">
             </div>
         </div>
 
-        <div class="footer">
-            <p>🎮 享受游戏的乐趣，让生活更加精彩！</p>
+        <!-- 英雄区 -->
+        <div class="hero-section">
+            <div class="hero-badge">&#x1F31F; 精选游戏合集</div>
+            <h1 class="hero-title">
+                <span class="line1">林澌潾的</span>
+                <span class="line2">小游戏网站</span>
+            </h1>
+            <p class="hero-subtitle">60个精彩小游戏，适合所有小朋友，快来挑选你喜欢的游戏吧！</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-num">60</div>
+                    <div class="stat-label">精选游戏</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">6</div>
+                    <div class="stat-label">游戏分类</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">100%</div>
+                    <div class="stat-label">免费畅玩</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分类标签 -->
+        <div class="category-tabs" id="categoryTabs">
+            <button class="cat-btn active" data-cat="all">
+                <span>&#x1F3AE;</span> 全部游戏
+            </button>
+            <button class="cat-btn" data-cat="action">
+                <span>&#x2694;&#xFE0F;</span> 动作冒险
+            </button>
+            <button class="cat-btn" data-cat="puzzle">
+                <span>&#x1F9E9;</span> 益智解谜
+            </button>
+            <button class="cat-btn" data-cat="shooting">
+                <span>&#x1F3AF;</span> 射击对战
+            </button>
+            <button class="cat-btn" data-cat="racing">
+                <span>&#x1F3CE;&#xFE0F;</span> 赛车竞技
+            </button>
+            <button class="cat-btn" data-cat="casual">
+                <span>&#x1F31F;</span> 休闲趣味
+            </button>
+            <button class="cat-btn" data-cat="holiday">
+                <span>&#x1F384;</span> 节日主题
+            </button>
+        </div>
+
+        <!-- 游戏网格 -->
+        <div class="section-title">
+            <span id="sectionTitle">&#x1F3AE;</span> 全部游戏
+            <span id="gameCount" style="font-size:0.9rem;color:rgba(255,255,255,0.4);font-weight:600;"></span>
+        </div>
+
+        <div class="games-grid" id="gamesGrid"></div>
+
+        <div class="no-results" id="noResults">
+            <div class="emoji">&#x1F914;</div>
+            <p>没有找到相关游戏，试试其他关键词吧！</p>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="site-footer">
+            <div class="footer-divider"></div>
+            <div class="footer-links">
+                <span>&#x1F31F; 林澌潾小游戏网站</span>
+                <span>&#x2764;&#xFE0F; 让游戏更快乐</span>
+            </div>
+            <p class="footer-copy">&copy; 2026 林澌潾小游戏网站 · 适合所有小朋友</p>
         </div>
     </div>
+
+    <button class="back-to-top" id="backToTop" title="回到顶部">&#x2934;</button>
+
+<script>
+// ==================== 游戏数据 ====================
+const games = [
+    // 动作冒险 (1-6, 15, 37-39, 48, 54)
+    { id: 1,  name: '僵尸鸭猎手',       href: './1-僵尸鸭猎手/index.html',           cat: 'action',   emoji: '&#x1F989;', color: '#4c9aff', tag: '动作',   desc: '射击僵尸鸭，超级刺激！' },
+    { id: 2,  name: '斯瓦特大战僵尸',   href: './2-斯瓦特大战僵尸/index.html',       cat: 'action',   emoji: '&#x1F9DD;', color: '#6bcb77', tag: '动作',   desc: '勇敢对战僵尸怪物！' },
+    { id: 3,  name: '坦克大战',         href: './3-坦克大战/index.html',             cat: 'action',   emoji: '&#x1F9E7;', color: '#6bcb77', tag: '动作',   desc: '驾驶坦克横扫战场！' },
+    { id: 4,  name: '木乃伊糖果',       href: './4-木乃伊糖果/index.html',           cat: 'puzzle',   emoji: '&#x1F36C;', color: '#ffd93d', tag: '解谜',   desc: '收集木乃伊的糖果！' },
+    { id: 5,  name: '万圣节记忆',       href: './5-万圣节记忆/index.html',           cat: 'holiday',  emoji: '&#x1F47B;', color: '#ff8c42', tag: '节日',   desc: '万圣节记忆大挑战！' },
+    { id: 6,  name: '毁灭僵尸',         href: './6-毁灭僵尸/index.html',             cat: 'action',   emoji: '&#x1F47A;', color: '#ff5757', tag: '动作',   desc: '用各种武器毁灭僵尸！' },
+    { id: 7,  name: '粘猴手机游戏',     href: './7-粘猴手机游戏/index.html',         cat: 'casual',   emoji: '&#x1F435;', color: '#ffd93d', tag: '休闲',   desc: '超级粘人的小猴子！' },
+    { id: 8,  name: '水暖工',           href: './8-水暖工/index.html',               cat: 'puzzle',   emoji: '&#x1F6B0;', color: '#4c9aff', tag: '解谜',   desc: '修理水管，逻辑挑战！' },
+    { id: 9,  name: '黄金矿工',         href: './9-黄金矿工/index.html',             cat: 'casual',   emoji: '&#x1F48E;', color: '#ffd93d', tag: '休闲',   desc: '挖掘金矿，积累财富！' },
+    { id: 10, name: '逃亡',             href: './10-逃亡/index.html',                cat: 'action',   emoji: '&#x1F3C3;', color: '#ff8c42', tag: '动作',   desc: '紧张刺激的逃亡之旅！' },
+    { id: 11, name: '水果馅饼',         href: './11-水果馅饼/index.html',           cat: 'casual',   emoji: '&#x1F351;', color: '#ff6b9d', tag: '休闲',   desc: '制作美味水果馅饼！' },
+    { id: 12, name: '砌砖',             href: './12-砌砖/index.html',                cat: 'casual',   emoji: '&#x1F9F1;', color: '#c44cff', tag: '休闲',   desc: '灵活操作，完美砌砖！' },
+    { id: 13, name: '流浪者大战僵尸',   href: './13-流浪者大战僵尸/index.html',     cat: 'action',   emoji: '&#x1F47A;', color: '#ff5757', tag: '动作',   desc: '流浪者与僵尸的史诗对决！' },
+    { id: 14, name: '万圣节泡泡枪手',   href: './14-万圣节泡泡枪手/index.html',     cat: 'holiday',  emoji: '&#x1F388;', color: '#c44cff', tag: '节日',   desc: '万圣节泡泡射击！' },
+    { id: 15, name: '忍者冒险小游戏',   href: './15-忍者冒险小游戏/index.html',     cat: 'action',   emoji: '&#x1F977;', color: '#c44cff', tag: '动作',   desc: '忍者的秘密冒险！' },
+    { id: 16, name: '赌场卡记忆',       href: './16-赌场卡记忆/index.html',         cat: 'puzzle',   emoji: '&#x1F0A1;', color: '#ffd93d', tag: '解谜',   desc: '记忆卡牌，挑战极限！' },
+    { id: 17, name: '吃水果的蛇',       href: './17-吃水果的蛇/index.html',         cat: 'casual',   emoji: '&#x1F40D;', color: '#6bcb77', tag: '休闲',   desc: '经典贪吃蛇的新玩法！' },
+    { id: 18, name: '坦克防御兵',       href: './18-坦克防御兵/index.html',         cat: 'action',   emoji: '&#x1F6E1;', color: '#6bcb77', tag: '动作',   desc: '防御坦克，保卫阵地！' },
+    { id: 19, name: '捕鱼狂',           href: './19-捕鱼狂/index.html',             cat: 'casual',   emoji: '&#x1F41F;', color: '#4c9aff', tag: '休闲',   desc: '海洋捕鱼，收获满满！' },
+    { id: 20, name: '疯狂跑步者',       href: './20-疯狂跑步者/index.html',         cat: 'racing',   emoji: '&#x1F3C3;', color: '#ff8c42', tag: '竞技',   desc: '跑得越快，分数越高！' },
+    { id: 21, name: '航天飞机',         href: './21-航天飞机/index.html',           cat: 'action',   emoji: '&#x1F6E8;', color: '#4c9aff', tag: '动作',   desc: '驾驶航天飞机飞向宇宙！' },
+    { id: 22, name: '超级牛仔跑',       href: './22-超级牛仔跑/index.html',         cat: 'racing',   emoji: '&#x1F3C4;', color: '#ff8c42', tag: '竞技',   desc: '牛仔的疯狂跑酷！' },
+    { id: 23, name: '猎鸭者',           href: './23-猎鸭者/index.html',             cat: 'shooting', emoji: '&#x1F426;', color: '#6bcb77', tag: '射击',   desc: '精准射击，猎获鸭子！' },
+    { id: 24, name: '交通赛车',         href: './24-交通赛车/index.html',           cat: 'racing',   emoji: '&#x1F697;', color: '#ff8c42', tag: '竞技',   desc: '公路飞车，躲避障碍！' },
+    { id: 25, name: '女孩打扮',         href: './25-女孩打扮/index.html',           cat: 'casual',   emoji: '&#x1F467;', color: '#ff6b9d', tag: '休闲',   desc: '为女孩设计完美造型！' },
+    { id: 26, name: '烛光超线',         href: './26-烛光超线/index.html',           cat: 'casual',   emoji: '&#x1F56F;', color: '#ffd93d', tag: '休闲',   desc: '控制蜡烛，画出轨迹！' },
+    { id: 27, name: '果冻3',            href: './27-果冻3/index.html',             cat: 'puzzle',   emoji: '&#x1F9C1;', color: '#ff6b9d', tag: '解谜',   desc: '果冻的奇妙物理世界！' },
+    { id: 28, name: '射击强盗',         href: './28-射击强盗/index.html',           cat: 'shooting', emoji: '&#x1F46E;', color: '#ff5757', tag: '射击',   desc: '正义出击，击退强盗！' },
+    { id: 29, name: '僵尸枪手',         href: './29-僵尸枪手/index.html',           cat: 'shooting', emoji: '&#x1F3AF;', color: '#ff5757', tag: '射击',   desc: '僵尸来了，拿起武器！' },
+    { id: 30, name: '圣诞熊猫跑步',     href: './30-圣诞熊猫跑步/index.html',       cat: 'holiday',  emoji: '&#x1F43C;', color: '#ff6b9d', tag: '节日',   desc: '圣诞熊猫的雪地奔跑！' },
+    { id: 31, name: '速度赛车',         href: './31-速度赛车/index.html',           cat: 'racing',   emoji: '&#x1F3CE;', color: '#ff8c42', tag: '竞技',   desc: '极速狂飙，感受速度！' },
+    { id: 32, name: '圣诞比赛',         href: './32-圣诞比赛/index.html',           cat: 'holiday',  emoji: '&#x1F384;', color: '#ff6b9d', tag: '节日',   desc: '圣诞主题的趣味比赛！' },
+    { id: 33, name: '圣诞气球',         href: './33-圣诞气球/index.html',           cat: 'holiday',  emoji: '&#x1F388;', color: '#ffd93d', tag: '节日',   desc: '圣诞气球，欢乐无限！' },
+    { id: 34, name: '儿童真彩色',       href: './34-儿童真彩色/index.html',         cat: 'casual',   emoji: '&#x1F308;', color: '#c44cff', tag: '休闲',   desc: '色彩大挑战，识别颜色！' },
+    { id: 35, name: '空战',             href: './35-空战/index.html',               cat: 'shooting', emoji: '&#x2708;', color: '#4c9aff', tag: '射击',   desc: '空中对决，制霸蓝天！' },
+    { id: 36, name: '狂鲨任务',         href: './36-狂鲨任务/index.html',           cat: 'action',   emoji: '&#x1F988;', color: '#4c9aff', tag: '动作',   desc: '深海狂鲨的冒险任务！' },
+    { id: 37, name: '棍兵',             href: './37-棍兵/index.html',               cat: 'action',   emoji: '&#x1F3AE;', color: '#ffd93d', tag: '动作',   desc: 'Stickman的战斗故事！' },
+    { id: 38, name: '泡泡教授',         href: './38-泡泡教授/index.html',           cat: 'puzzle',   emoji: '&#x1F9D1;', color: '#4c9aff', tag: '解谜',   desc: '泡泡的物理实验！' },
+    { id: 39, name: '忍者游戏',         href: './39-忍者游戏/index.html',           cat: 'action',   emoji: '&#x1F977;', color: '#c44cff', tag: '动作',   desc: '成为最厉害的忍者！' },
+    { id: 40, name: '糖果比赛3',       href: './40-糖果比赛3/index.html',         cat: 'casual',   emoji: '&#x1F36C;', color: '#ff6b9d', tag: '休闲',   desc: '糖果王国的趣味比赛！' },
+    { id: 41, name: '超彩色线',         href: './41-超彩色线/index.html',           cat: 'casual',   emoji: '&#x2728;', color: '#c44cff', tag: '休闲',   desc: '画出炫彩的线条！' },
+    { id: 42, name: '触球',             href: './42-触球/index.html',               cat: 'casual',   emoji: '&#x26BD;', color: '#6bcb77', tag: '休闲',   desc: '指尖触控，操控球球！' },
+    { id: 43, name: '快骰子',           href: './43-快骰子/index.html',             cat: 'puzzle',   emoji: '&#x1F3B2;', color: '#ff8c42', tag: '解谜',   desc: '骰子快选，反应力挑战！' },
+    { id: 44, name: '气球天堂',         href: './44-气球天堂/index.html',           cat: 'casual',   emoji: '&#x1F388;', color: '#ff6b9d', tag: '休闲',   desc: '五彩气球飘向天空！' },
+    { id: 45, name: '热珠宝',           href: './45-热珠宝/index.html',             cat: 'puzzle',   emoji: '&#x1F48D;', color: '#ffd93d', tag: '解谜',   desc: '珠宝连连看的乐趣！' },
+    { id: 46, name: '笑脸微笑小游戏',   href: './46-笑脸微笑小游戏/index.html',     cat: 'casual',   emoji: '&#x1F60A;', color: '#ffd93d', tag: '休闲',   desc: '传递快乐的笑脸游戏！' },
+    { id: 47, name: '儿童数学游戏',     href: './47-儿童数学游戏/index.html',       cat: 'puzzle',   emoji: '&#x1F522;', color: '#6bcb77', tag: '解谜',   desc: '趣味数学，寓教于乐！' },
+    { id: 48, name: '僵尸起义',         href: './48-僵尸起义/index.html',           cat: 'action',   emoji: '&#x1F47A;', color: '#ff5757', tag: '动作',   desc: '击退僵尸大军！' },
+    { id: 49, name: '超级目标',         href: './49-超级目标/index.html',           cat: 'shooting', emoji: '&#x1F3AF;', color: '#6bcb77', tag: '射击',   desc: '瞄准目标，百发百中！' },
+    { id: 50, name: '超级跑车拼图',     href: './50-超级跑车拼图/index.html',       cat: 'puzzle',   emoji: '&#x1F3CE;', color: '#ff8c42', tag: '解谜',   desc: '拼出炫酷超级跑车！' },
+    { id: 51, name: '儿童纵横填字游戏', href: './51-儿童纵横填字游戏/index.html',   cat: 'puzzle',   emoji: '&#x1F4DD;', color: '#4c9aff', tag: '解谜',   desc: '趣味填字，扩展词汇！' },
+    { id: 52, name: '希塔洛契卡',       href: './52-希塔洛契卡/index.html',         cat: 'puzzle',   emoji: '&#x1F0CF;', color: '#c44cff', tag: '解谜',   desc: '经典纸牌消消乐！' },
+    { id: 53, name: '汽车物理学',       href: './53-汽车物理学/index.html',         cat: 'racing',   emoji: '&#x1F697;', color: '#ff8c42', tag: '竞技',   desc: '感受真实的汽车物理！' },
+    { id: 54, name: '机器人X',          href: './54-机器人X/index.html',             cat: 'action',   emoji: '&#x1F916;', color: '#4c9aff', tag: '动作',   desc: '机器人X的冒险之旅！' },
+    { id: 55, name: '记忆游戏',         href: './55-记忆游戏/index.html',           cat: 'puzzle',   emoji: '&#x1F4A4;', color: '#c44cff', tag: '解谜',   desc: '挑战记忆极限！' },
+    { id: 56, name: '卡通糖果 Match3',  href: './56-卡通糖果- MatCH3/index.html',   cat: 'puzzle',   emoji: '&#x1F36C;', color: '#ff6b9d', tag: '解谜',   desc: '三消糖果，欢乐无限！' },
+    { id: 57, name: '弹力球',           href: './57-弹力球/index.html',             cat: 'casual',   emoji: '&#x1F3B1;', color: '#ff8c42', tag: '休闲',   desc: '弹跳的小球乐趣多！' },
+    { id: 58, name: '跳动弹跳',         href: './58-跳动弹跳/index.html',           cat: 'casual',   emoji: '&#x1F31F;', color: '#ffd93d', tag: '休闲',   desc: '不断弹跳，越跳越高！' },
+    { id: 59, name: '鱼类世界 Match3', href: './59-鱼类世界- MatCH3/index.html',   cat: 'puzzle',   emoji: '&#x1F41F;', color: '#4c9aff', tag: '解谜',   desc: '海底世界三消冒险！' },
+    { id: 60, name: '复活节记忆',       href: './60-复活节记忆/index.html',         cat: 'holiday',  emoji: '&#x1F95E;', color: '#ffd93d', tag: '节日',   desc: '复活节的记忆挑战！' },
+];
+
+// ==================== 背景粒子 ====================
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+    constructor() { this.reset(); }
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = Math.random() * 0.5 + 0.2;
+        this.opacity = Math.random() * 0.5 + 0.1;
+        const colors = ['255,107,157','196,76,255','76,203,119','255,217,61','0,210,255','255,140,66'];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.life = 0;
+        this.maxLife = Math.random() * 300 + 200;
+    }
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life++;
+        if (this.life > this.maxLife || this.y > canvas.height) this.reset();
+    }
+    draw() {
+        const alpha = this.opacity * (1 - this.life / this.maxLife);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.color},${alpha})`;
+        ctx.fill();
+    }
+}
+
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ==================== 浮动形状 ====================
+const floatShapes = document.getElementById('floatShapes');
+const shapeColors = ['#ff6b9d','#c44cff','#4c9aff','#00d2ff','#ffd93d','#6bcb77','#ff8c42'];
+
+for (let i = 0; i < 15; i++) {
+    const el = document.createElement('div');
+    el.className = 'float-shape';
+    const size = Math.random() * 60 + 20;
+    el.style.cssText = `
+        width: ${size}px; height: ${size}px;
+        left: ${Math.random() * 100}%;
+        background: linear-gradient(135deg, ${shapeColors[i % shapeColors.length]}88, ${shapeColors[(i+3) % shapeColors.length]}44);
+        animation-duration: ${Math.random() * 15 + 15}s;
+        animation-delay: ${Math.random() * 10}s;
+    `;
+    floatShapes.appendChild(el);
+}
+
+// ==================== 分类标签 ====================
+const catLabels = {
+    all:     { icon: '&#x1F3AE;', text: '全部游戏' },
+    action:  { icon: '&#x2694;&#xFE0F;', text: '动作冒险' },
+    puzzle:  { icon: '&#x1F9E9;', text: '益智解谜' },
+    shooting:{ icon: '&#x1F3AF;', text: '射击对战' },
+    racing:  { icon: '&#x1F3CE;&#xFE0F;', text: '赛车竞技' },
+    casual:  { icon: '&#x1F31F;', text: '休闲趣味' },
+    holiday: { icon: '&#x1F384;', text: '节日主题' },
+};
+
+let activeCat = 'all';
+let searchTerm = '';
+
+document.getElementById('categoryTabs').addEventListener('click', (e) => {
+    const btn = e.target.closest('.cat-btn');
+    if (!btn) return;
+    activeCat = btn.dataset.cat;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderGames();
+});
+
+// ==================== 搜索 ====================
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    searchTerm = e.target.value.trim();
+    renderGames();
+});
+
+// ==================== 渲染游戏 ====================
+function getGradient(color) {
+    return `linear-gradient(135deg, ${color}33, ${color}11)`;
+}
+
+function renderGames() {
+    const grid = document.getElementById('gamesGrid');
+    const noResults = document.getElementById('noResults');
+    const sectionTitle = document.getElementById('sectionTitle');
+    const gameCount = document.getElementById('gameCount');
+
+    let filtered = games.filter(g => {
+        const matchCat = activeCat === 'all' || g.cat === activeCat;
+        const matchSearch = !searchTerm || g.name.includes(searchTerm) || g.desc.includes(searchTerm);
+        return matchCat && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '';
+        noResults.classList.add('visible');
+        gameCount.textContent = '';
+    } else {
+        noResults.classList.remove('visible');
+        gameCount.textContent = `（${filtered.length}个）`;
+    }
+
+    sectionTitle.innerHTML = catLabels[activeCat].icon;
+
+    grid.innerHTML = filtered.map((g, i) => `
+        <a href="${g.href}" class="game-card" target="_blank" style="animation-delay: ${i * 0.04}s;">
+            <div class="card-shine"></div>
+            <div class="card-thumb" style="background: ${getGradient(g.color)};">
+                <span style="filter: drop-shadow(0 4px 12px ${g.color}88);">${g.emoji}</span>
+            </div>
+            <div class="card-info">
+                <div class="card-tag" style="background:${g.color}22;color:${g.color};border:1px solid ${g.color}44;">
+                    ${g.tag}
+                </div>
+                <div class="card-title">${g.name}</div>
+                <div class="card-desc">${g.desc}</div>
+                <div class="card-play">&#x25B6; 开始游戏</div>
+            </div>
+        </a>
+    `).join('');
+}
+
+renderGames();
+
+// ==================== 回到顶部 ====================
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+    backToTop.classList.toggle('show', window.scrollY > 400);
+});
+backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+</script>
 </body>
 </html>
